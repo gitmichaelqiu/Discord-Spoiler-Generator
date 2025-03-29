@@ -11,7 +11,7 @@ The Discord Spoiler Generator is a simple web application that allows users to g
 
 ## Demo
 
-You can try out the Discord Spoiler Generator [here](https://your-deployed-url.com).
+You can try out the Discord Spoiler Generator [here](https://gitmichaelqiu.github.io/Discord-Spoiler-Generator/).
 
 ## How Does It work?
 
