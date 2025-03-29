@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Spoiler Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button.copied {
+            background-color: #28a745;
+        }
+        .mode-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .mode-selector label {
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Dark mode styles */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #121212;
+                color: #e0e0e0;
+            }
+            h1 {
+                color: #e0e0e0;
+            }
+            textarea {
+                background-color: #212121;
+                color: #e0e0e0;
+                border-color: #424242;
+            }
+            button {
+                background-color: #1e88e5; /* Darker blue */
+            }
+            button:hover {
+                background-color: #1565c0; /* Even darker blue */
+            }
+            button.copied {
+                background-color: #388e3c;
+            }
+            .footer a {
+                color: #1e88e5; /* Darker blue */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Discord Spoiler Generator</h1>
+        
+        <div class="mode-selector">
+            <label>Mode:</label>
+            <label>
+                <input type="radio" name="mode" value="word" checked> Word Mode
+            </label>
+            <label>
+                <input type="radio" name="mode" value="character"> Character Mode
+            </label>
+        </div>
+
+        <textarea id="input" placeholder="Enter text to transform..."></textarea>
+        <textarea id="output" readonly placeholder="Transformed text will appear here..."></textarea>
+        
+        <div class="controls">
+            <button onclick="copyOutput()">Copy Result</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>
+            Created by <a href="https://github.com/gitmichaelqiu" target="_blank">Michael Qiu</a> |
+            <a href="https://github.com/gitmichaelqiu/Discord-Spoiler-Generator" target="_blank">GitHub Repo</a> |
+            <a href="https://gitmichaelqiu.github.io/" target="_blank">Blog</a>
+        </p>
+    </div>
+
+    <script>
+        function sandwichCharacters(str) {
+            const parts = str.split(':');
+            const wrappedParts = parts.map((part, index) => {
+                if (index % 2 === 0) {
+                    return Array.from(part).map(c => `||${c}||`).join('');
+                } else {
+                    if (part.includes(' ')) {
+                        return Array.from(str).map(c => `||${c}||`).join('');
+                    } else {
+                        return `||:${part}:||`;
+                    }
+                }
+            });
+            return wrappedParts.join('');
+        }
+
+        function wordModeTransform(str) {
+            return str.split(/\s+/)
+                      .filter(word => word.length > 0)
+                      .map(word => `||${word}||`)
+                      .join(' ');
+        }
+
+        function updateOutput() {
+            const inputText = document.getElementById('input').value;
+            const mode = document.querySelector('input[name="mode"]:checked').value;
+            
+            const outputText = mode === 'word' 
+                ? wordModeTransform(inputText) 
+                : sandwichCharacters(inputText);
+            
+            document.getElementById('output').value = outputText;
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('output');
+            const btn = document.querySelector('button');
+            
+            output.select();
+            document.execCommand('copy');
+            
+            // Visual feedback for copy
+            btn.textContent = 'Copied!';
+            btn.classList.add('copied');
+            setTimeout(() => {
+                btn.textContent = 'Copy Result';
+                btn.classList.remove('copied');
+            }, 2000);
+        }
+
+        // Event listeners
+        document.getElementById('input').addEventListener('input', updateOutput);
+        document.querySelectorAll('input[name="mode"]').forEach(radio => {
+            radio.addEventListener('change', updateOutput);
+        });
+    </script>
+</body>
+</html>
