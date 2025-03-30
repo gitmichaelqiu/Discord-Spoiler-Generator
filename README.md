@@ -15,4 +15,4 @@ You can try out the Discord Spoiler Generator [here](https://gitmichaelqiu.githu
 
 ## How Does It work?
 
-By add "||" at the beginning and the end of words.
+By adding "||" at the beginning and the end of words.
